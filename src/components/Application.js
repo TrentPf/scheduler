@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React from "react";
 
 import "components/Application.scss";
 
@@ -27,6 +26,7 @@ export default function Application(props) {
       <Appointment
         key={appointment.id}
         {...appointment}
+        time={appointment.time}
         interview={interview}
         interviewers={interviewers}
         bookInterview={bookInterview}
@@ -56,6 +56,7 @@ export default function Application(props) {
       </section>
       <section className="schedule">
         {appointmentItems}
+        <Appointment key="last" time="5pm" />
       </section>
     </main>
   );
