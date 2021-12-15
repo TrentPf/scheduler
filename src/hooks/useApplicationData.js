@@ -50,26 +50,15 @@ export default function useApplicationData() {
   }
 
   function updateSpotsRemaining(state, id) {
-    let availSpots = 0;
-    const day = state.days.filter((element) => 
-      element.appointments.includes(id)
-    );
 
-    dayToArray = day[0];
+    const listOfAppointmentsIds = day.appointments
+    const listOfEmptyAppointments = listOfAppointmentsIds.filter(appId => !appointments[appId].interview)
+    const spots = listOfEmptyAppointments.length;
 
-    for(const appID of dayToArray.appointments) {
-      if (state.appointments[appID].interview === null) {
-        availSpots++;
-      }
-    }
-
-    const dayWithSpots = { ...dayToArray, spots };
-
-    const index = state.days.findIndex(day => day.name === dayToArray.name);
-
-    state.days[index] = dayWithSpots;
-
-    setState(state);
+    setState({
+      ...state,
+      spots
+    });
   }
   return {state, setDay, bookInterview, cancelInterview}
 }
