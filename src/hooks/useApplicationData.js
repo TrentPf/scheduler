@@ -34,33 +34,43 @@ export default function useApplicationData() {
   }, []);
  
   function bookInterview(id, interview) {
-    setState({
-      ...state,
-      appointments
-    }); 
+    const days = [ ...state.days];
+    const dayIndex = state.days.findIndex((day) => day.appointments.includes(id));
+    const spots = updateSpotsRemaining(state, appointments);
+    const newDay = { ...days[dayIndex], spots};
+    days[dayIndex] = newDay;
+
+    setState(prev =>({
+      ...prev,
+      appointments,
+      days
+    })); 
     return axios.put(`/api/appointments/${id}`, {interview})
   }
 
   function cancelInterview(id, interview) {
-    setState({
-      ...state,
-      appointments
-    });
+    appointment = {...state.appointments[id], interview: null};
+    const days = [ ...state.days];
+    const dayIndex = state.days.findIndex((day) => day.appointments.includes(id));
+    const spots = updateSpotsRemaining(state, appointments);
+    const newDay = { ...days[dayIndex], spots};
+    days[dayIndex] = newDay;
+
+    setState(prev =>({
+      ...prev,
+      appointments,
+      days
+    })); 
     return axios.delete(`/api/appointments/${id}`, interview)
   }
 
-  function updateSpotsRemaining(state, id) {
+  function updateSpotsRemaining() {
 
-    const listOfAppointmentIds = state.days.filter(day => day.name === state.day);
-    const todaysApp = listOfAppointmentIds[0].appointments;
-    const emptySpots = todaysApp.filter(app => !appointments[app].interview);
-    const spots = emptySpots.length;
+    const listOfAppointmentIds = day.appointments;
+    const listOfEmptyAppointments = listOfAppointmentIds.filter(appId => !appointments[appId].interview);
+    const spots = listOfEmptyAppointments.length;
     return spots;
 
-    setState({
-      ...state,
-      spots
-    });
   }
   return {state, setDay, bookInterview, cancelInterview}
 }
