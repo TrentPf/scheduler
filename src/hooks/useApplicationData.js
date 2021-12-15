@@ -51,9 +51,11 @@ export default function useApplicationData() {
 
   function updateSpotsRemaining(state, id) {
 
-    const listOfAppointmentsIds = day.appointments
-    const listOfEmptyAppointments = listOfAppointmentsIds.filter(appId => !appointments[appId].interview)
-    const spots = listOfEmptyAppointments.length;
+    const listOfAppointmentIds = state.days.filter(day => day.name === state.day);
+    const todaysApp = listOfAppointmentIds[0].appointments;
+    const emptySpots = todaysApp.filter(app => !appointments[app].interview);
+    const spots = emptySpots.length;
+    return spots;
 
     setState({
       ...state,
