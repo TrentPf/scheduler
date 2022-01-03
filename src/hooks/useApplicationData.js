@@ -32,17 +32,19 @@ export default function useApplicationData() {
     const appointments = {
       ...state.appointments,
       [id]: appointment
-    };    
+    };
 
-    setState((prev) => {
-      const spots = updateSpotsRemaining(prev, appointments);
-      return { 
-        ...prev,
-        appointments,
-        days: spots
-      };
-    }); 
     return axios.put(`/api/appointments/${id}`, {interview})
+    .then(() => {
+      setState((prev) => {
+        const spots = updateSpotsRemaining(prev, appointments);
+        return { 
+          ...prev,
+          appointments,
+          days: spots
+        };
+      }); 
+    });   
   }
 
   function cancelInterview(id, interview) {
@@ -57,16 +59,17 @@ export default function useApplicationData() {
     };  
    
     
-
-    setState((prev) => {
-      const spots = updateSpotsRemaining(prev, appointments);
-      return { 
-        ...prev,
-        appointments,
-        days: spots
-      };
-    }); 
     return axios.delete(`/api/appointments/${id}`, {interview})
+    .then(() => {
+      setState((prev) => {
+        const spots = updateSpotsRemaining(prev, appointments);
+        return { 
+          ...prev,
+          appointments,
+          days: spots
+        };
+      });   
+    });
   }
 
   function updateSpotsRemaining(state, appointments) {
